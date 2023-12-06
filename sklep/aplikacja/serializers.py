@@ -4,14 +4,13 @@ from .models import Uzytkownik, Zalogowany, Produkt, Zamowienie
 class UzytkownikModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Uzytkownik
-        fields = ['id', 'nazwa', 'email', 'haslo', 'powtorz_haslo']
+        fields = ['id', 'nazwa', 'email', 'haslo']
         read_only_fields = ['id']
 
     def update(self, instance, validated_data):
         instance.nazwa = validated_data.get('nazwa', instance.nazwa)
         instance.email = validated_data.get('email', instance.email)
         instance.haslo = validated_data.get('haslo', instance.haslo)
-        instance.powtorz_haslo = validated_data.get('powtorz_haslo', instance.powtorz_haslo)
         instance.save()
         return instance
 class ZalogowanyModelSerializer(serializers.ModelSerializer):
