@@ -17,10 +17,14 @@ class Uzytkownik(models.Model):
     email = models.CharField(max_length=50, unique=True)
     haslo = models.CharField(max_length=20)
     powtorz_haslo = models.CharField(max_length=20)
+    def __str__(self):
+        return self.nazwa
 
 class Zalogowany(models.Model):
     nazwa = models.CharField(max_length=35)
     haslo = models.CharField(max_length=20)
+    def __str__(self):
+        return self.nazwa
 
 class Produkt(models.Model):
     nazwa = models.CharField(max_length=50)
@@ -34,8 +38,11 @@ class Produkt(models.Model):
     def __str__(self):
         return self.nazwa
 class Zamowienie(models.Model):
+    nazwa = models.CharField(max_length=50, default="Zamowienie")
     uzytkownik = models.ForeignKey(Uzytkownik, on_delete=models.CASCADE)
-    produkty = models.ManyToManyField(Produkt) #
+    produkty = models.ManyToManyField(Produkt)
     data_zamowienia = models.DateTimeField(auto_now_add=True)
     adres_dostawy = models.CharField(max_length=70)
     status = models.CharField(max_length=50, choices=status_zamowienia, default='Nowe')
+    def __str__(self):
+        return self.nazwa
