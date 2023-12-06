@@ -18,6 +18,9 @@ class Uzytkownik(models.Model):
     haslo = models.CharField(max_length=20)
     powtorz_haslo = models.CharField(max_length=20)
 
+class Zalogowany(models.Model):
+    nazwa = models.CharField(max_length=35)
+    haslo = models.CharField(max_length=20)
 
 class Produkt(models.Model):
     nazwa = models.CharField(max_length=50)
