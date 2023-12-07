@@ -1,18 +1,23 @@
 from django.http import HttpResponse
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Uzytkownik, Zalogowany, Zamowienie, Produkt
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.views import APIView
+from rest_framework.authtoken.models import Token
 from .serializers import UzytkownikModelSerializer, ZalogowanyModelSerializer, ZamowienieModelSerializer, ProduktModelSerializer
 def index(request):
     return HttpResponse("Hello world!")
-
-@api_view(['GET']) #Lista wszystkich uzytkownikow
-def uzytkownicy(request):
-    if request.method == 'GET':
-        lista = Uzytkownik.objects.all()
-        serializer = UzytkownikModelSerializer(lista, many=True)
-        return Response(serializer.data)
+class uzytkownicy(APIView):
+    permission_classes = (IsAuthenticated,)
+    def get(self, request):
+        if request.method == 'GET':
+            lista = Uzytkownik.objects.all()
+            serializer = UzytkownikModelSerializer(lista, many=True)
+            return Response(serializer.data)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
