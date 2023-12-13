@@ -1,28 +1,23 @@
 from rest_framework import serializers
-from .models import Uzytkownik, Zalogowany, Produkt, Zamowienie
-
+from .models import Uzytkownik, Produkt, Zamowienie, Koszyk
+from django.contrib.auth.models import User
 class UzytkownikModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Uzytkownik
-        fields = ['id', 'nazwa', 'email', 'haslo']
+        fields = ['id', 'nazwa', 'imie', 'nazwisko', 'email', 'haslo', 'telefon']
         read_only_fields = ['id']
 
     def update(self, instance, validated_data):
         instance.nazwa = validated_data.get('nazwa', instance.nazwa)
+        instance.imie = validated_data.get('imie', instance.imie)
+        instance.nazwisko = validated_data.get('nazwisko', instance.nazwisko)
         instance.email = validated_data.get('email', instance.email)
         instance.haslo = validated_data.get('haslo', instance.haslo)
+        instance.telefon= validated_data.get('telefon', instance.telefon)
         instance.save()
         return instance
-class ZalogowanyModelSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Zalogowany
-        fields = ['id', 'nazwa', 'haslo']
-        read_only_fields = ['id']
-    def update(self, instance, validated_data):
-        instance.nazwa = validated_data.get('nazwa', instance.nazwa)
-        instance.haslo = validated_data.get('haslo', instance.haslo)
-        instance.save()
-        return instance
+
+
 class ZamowienieModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Zamowienie
@@ -55,3 +50,24 @@ class ProduktModelSerializer(serializers.ModelSerializer):
         instance.opis = validated_data.get('opis', instance.opis)
         instance.save()
         return instance
+class KoszykModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Koszyk
+        fields = ['id', 'nazwa', 'uzytkownik', 'produkty']
+        read_only_fields = ['id']
+
+    def update(self, instance, validated_data):
+        instance.nazwa = validated_data.get('nazwa', instance.nazwa)
+        instance.uzytkownik = validated_data.get('uzytkownik', instance.uzytkownik)
+        instance.produkty = validated_data.get('produkty', instance.produkty)
+        instance.save()
+        return instance
+
+class UserDomyslnySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'password']
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        return user
+

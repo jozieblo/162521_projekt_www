@@ -1,5 +1,4 @@
 from django.db import models
-
 rodzaj_produktu = [
         ('komputer', 'komputer'),
         ('laptop', 'laptop'),
@@ -12,17 +11,15 @@ status_zamowienia = [
         ('Zrealizowane', 'Zrealizowane'),
     ]
 
+
 class Uzytkownik(models.Model):
     nazwa = models.CharField(max_length=35, unique=True)
-    email = models.CharField(max_length=50, unique=True)
-    haslo = models.CharField(max_length=20)
-    powtorz_haslo = models.CharField(max_length=20)
-    def __str__(self):
-        return self.nazwa
+    imie = models.CharField(max_length=35)
+    nazwisko = models.CharField(max_length=40)
+    email = models.CharField(max_length=50)
+    haslo = models.CharField(max_length=35)
+    telefon = models.IntegerField( )
 
-class Zalogowany(models.Model):
-    nazwa = models.CharField(max_length=35)
-    haslo = models.CharField(max_length=20)
     def __str__(self):
         return self.nazwa
 
@@ -38,11 +35,17 @@ class Produkt(models.Model):
     def __str__(self):
         return self.nazwa
 class Zamowienie(models.Model):
-    nazwa = models.CharField(max_length=50, default="Zamowienie")
+    nazwa = models.CharField(max_length=35, default="Zamowienie")
     uzytkownik = models.ForeignKey(Uzytkownik, on_delete=models.CASCADE)
     produkty = models.ManyToManyField(Produkt)
     data_zamowienia = models.DateTimeField(auto_now_add=True)
     adres_dostawy = models.CharField(max_length=70)
     status = models.CharField(max_length=50, choices=status_zamowienia, default='Nowe')
+    def __str__(self):
+        return self.nazwa
+class Koszyk(models.Model):
+    nazwa = models.CharField(max_length=35, default="Koszyk")
+    uzytkownik = models.ForeignKey(Uzytkownik, on_delete=models.CASCADE)
+    produkty = models.ManyToManyField(Produkt)
     def __str__(self):
         return self.nazwa
